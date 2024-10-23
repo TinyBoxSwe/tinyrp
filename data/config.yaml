@@ -1,0 +1,14 @@
+server:
+  host: "localhost"
+  listen_port: "7000"
+
+resources:
+  - name: images
+    endpoint: /server1
+    destination_url: "http://localhost:9001"
+  - name: users
+    endpoint: /server2
+    destination_url: "http://localhost:9002"
+  - name: api
+    endpoint: /server3
+    destination_url: "http://localhost:9003"
