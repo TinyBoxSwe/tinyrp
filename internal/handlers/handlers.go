@@ -24,32 +24,14 @@ func ProxyRequestHandler(routes map[string]config.Resource) http.HandlerFunc {
 
 		target_server := parts[1]
 
-		var destinationURL string
-		switch target_server {
-		case "images":
-			if route, ok := routes["images"]; ok {
-				destinationURL = route.Destination_url
-			}
-		case "users":
-			if route, ok := routes["users"]; ok {
-				destinationURL = route.Destination_url
-			}
-		case "api":
-			if route, ok := routes["api"]; ok {
-				destinationURL = route.Destination_url
-			}
-		default:
+		route, ok := routes[target_server]
+		if !ok {
 			http.Error(writer, "Unknown route", http.StatusNotFound)
 			logger.LogError(fmt.Errorf("unknown route: %s", target_server))
 			return
 		}
 
-		// If no destination URL was set, handle the 404 case
-		if destinationURL == "" {
-			http.Error(writer, "No matching route found", http.StatusNotFound)
-			logger.LogError(fmt.Errorf("no matching route found for: %s", target_server))
-			return
-		}
+		destinationURL := route.Destination_url
 
 		forwardRequest, err := http.NewRequest(request.Method, destinationURL, request.Body)
 		if err != nil {
