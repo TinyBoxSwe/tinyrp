@@ -63,7 +63,8 @@ func ProxyRequestHandler(routes map[string]config.Resource) http.HandlerFunc {
 			}
 		}
 
-		if _, err = io.Copy(writer, resp.Body); err != nil {
+		_, err = io.Copy(writer, resp.Body)
+		if err != nil {
 			http.Error(writer, "Error writing response body", http.StatusInternalServerError)
 			logger.LogError(fmt.Errorf("error writing response body: %v", err))
 		}
